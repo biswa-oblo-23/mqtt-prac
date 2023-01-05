@@ -7,7 +7,11 @@ app.use(json());
 /**
  * creating connection with mosquitto brocker
  */
-const client = connect('mqtt://test.mosquitto.org');
+// const client = connect('mqtt://test.mosquitto.org');
+/**
+ * creating connection with local brocker
+ */
+const client = connect('mqtt://localhost:1883');
 
 /**
  * Create connection
@@ -19,7 +23,12 @@ client.on('connect', () => {
 app.post('/v1/send-message', (req, res)=> {
   const { message } = req.body;
 
-  client.publish('prec', message);
+  const newData = {
+    message,
+    createdAt: new Date(),
+  }
+
+  client.publish('prec', JSON.stringify(newData));
 
   return res.send('ok');
 
